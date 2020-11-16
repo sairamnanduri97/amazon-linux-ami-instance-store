@@ -1,0 +1,45 @@
+---
+
+- hosts: all
+  gather_facts: true
+  become: yes
+
+  vars:
+    ntp_servers:
+      - 0.amazon.pool.ntp.org
+      - 1.amazon.pool.ntp.org
+      - 2.amazon.pool.ntp.org
+
+    cis_level_1_exclusions:
+    # Allows packer scripts to build by enabling /tmp
+      - 1.1.2
+      - 1.1.3
+      - 1.1.4
+      - 1.1.5
+    # Autofs is no longer installed and we need to ignore it or else will fail	
+      - 1.1.19
+    # Using Chronyd instead of NTP	
+      - 2.1.1.2	
+    # Using Samba	
+      - 2.1.12
+    # LDAP
+      - 2.2.5
+    # Firewall rules and locks us out at a point
+      - 3.1.1
+      - 3.3.2
+      - 3.3.3
+      - 3.5.1.1
+      - 3.5.1.4
+      - 3.5.2.1
+    # Disable remote logging
+      - 4.2.1.4
+    # Disabled SU group restriction
+      - 5.5
+    cis_level_2_exclusions:
+      - 6.1.1
+    cis_pass_max_days: 45
+    cis_umask_default: 002
+
+  roles:
+    - ansible-role-cis-amazon-linux
+      
